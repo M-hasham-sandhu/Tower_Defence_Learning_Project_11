@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,8 +11,8 @@ public class WaveController : MonoBehaviour
     public int CurrentWaveIndex { get; private set; } = -1;
     public bool IsSpawning { get; private set; } = false;
 
-    public event Action<int, WaveData> OnWaveStarted;
-    public event Action<int, WaveData> OnWaveCompleted;
+    public event System.Action<int, WaveData> OnWaveStarted;
+    public event System.Action<int, WaveData> OnWaveCompleted;
 
     private void Start()
     {
@@ -20,6 +21,7 @@ public class WaveController : MonoBehaviour
 
     public void StartNextWave()
     {
+        Debug.Log($"Starting wave {CurrentWaveIndex + 1}");
         if (IsSpawning) return;
         if (CurrentWaveIndex + 1 >= waves.Count)
         {
@@ -32,13 +34,25 @@ public class WaveController : MonoBehaviour
         WaveData currentWave = waves[CurrentWaveIndex];
         OnWaveStarted?.Invoke(CurrentWaveIndex, currentWave);
 
-        // Example: Iterate through enemiesToSpawn for this wave
-        // (Actual spawning logic will be implemented elsewhere)
-        foreach (var enemyInfo in currentWave.enemiesToSpawn)
+        StartCoroutine(SpawnWaveCoroutine(currentWave));
+    }
+
+    private IEnumerator SpawnWaveCoroutine(WaveData wave)
+    {
+        float xPos = 0f;
+        foreach (var enemyInfo in wave.enemiesToSpawn)
         {
-            // You can use enemyInfo.enemyPrefab, enemyInfo.count, enemyInfo.spawnDelay
-            // to spawn enemies as needed
+            for (int i = 0; i < enemyInfo.count; i++)
+            {
+                Vector3 spawnPos = new Vector3(xPos, 2, 0);
+                GameObject enemy = Instantiate(enemyInfo.enemyPrefab, spawnPos, Quaternion.identity, this.transform);
+                enemy.transform.localScale = new Vector3(50f, 50f, 50f);
+                xPos += 5f;
+                yield return new WaitForSeconds(enemyInfo.spawnDelay);
+            }
         }
+        // Optionally, call CompleteCurrentWave() here if you want to auto-complete after spawning
+        // CompleteCurrentWave();
     }
 
     // Call this when the wave is finished (all enemies defeated)

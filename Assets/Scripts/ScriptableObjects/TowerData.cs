@@ -24,7 +24,7 @@ public class TowerData : ScriptableObject
     [Header("Economy")]
     public int cost = 100;
     public int sellValue = 50;
-    [Header("Upgrades")]
-    [Tooltip("Assign up to 3 upgrades for this tower.")]
-    public TowerData[] nextUpgrades = new TowerData[3];
+    [Header("Upgrade")]
+    [Tooltip("Assign the next upgrade for this tower (or leave empty if max level).")]
+    public TowerData nextUpgrade;
 }

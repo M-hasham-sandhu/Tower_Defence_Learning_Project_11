@@ -11,12 +11,12 @@ public class Tower : MonoBehaviour
     }
 
     // Handles upgrade logic and visual swap
-    public bool Upgrade()
+    public GameObject Upgrade()
     {
         if (Data.nextUpgrade == null)
         {
             Debug.Log("Tower is already at max level.");
-            return false;
+            return null;
         }
 
         // Save position and parent
@@ -33,6 +33,6 @@ public class Tower : MonoBehaviour
             towerScript.Initialize(nextData);
 
         Debug.Log("Tower upgraded! New stats: Damage=" + nextData.damage + ", Range=" + nextData.range + ", AttackRate=" + nextData.attackRate);
-        return true;
+        return upgradedTower;
     }
 }

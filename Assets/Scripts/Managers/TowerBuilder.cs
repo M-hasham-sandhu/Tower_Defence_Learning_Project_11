@@ -47,7 +47,6 @@ public class TowerBuilder : MonoBehaviour
         }
 
         GameObject tower = Instantiate(data.towerPrefab, position, Quaternion.identity, parent);
-        // Optionally, assign the TowerData to a Tower script on the prefab
         var towerScript = tower.GetComponent<Tower>();
         if (towerScript != null)
             towerScript.Initialize(data);
@@ -63,15 +62,14 @@ public class TowerBuilder : MonoBehaviour
     }
 
     // Call this from a UI button to build the first stage of a tower
-  public void BuildTestTower()
-{
-    // Always spawn at (0, 0, 0) for testing
-    lastBuiltTower = BuildTower(TowerType.Type_1, 1, Vector3.zero, testSpawnParent);
-    if (lastBuiltTower != null)
+    public void BuildTestTower()
     {
-        Debug.Log("Built tower: " + lastBuiltTower.GetComponent<Tower>().Data.name);
+        lastBuiltTower = BuildTower(TowerType.Type_1, 1, Vector3.zero, testSpawnParent);
+        if (lastBuiltTower != null)
+        {
+            Debug.Log("Built tower: " + lastBuiltTower.GetComponent<Tower>().Data.name);
+        }
     }
-}
 
     // Call this from a UI button to upgrade the last built tower
     public void UpgradeTestTower()
@@ -84,13 +82,15 @@ public class TowerBuilder : MonoBehaviour
         var tower = lastBuiltTower.GetComponent<Tower>();
         if (tower != null)
         {
-            bool upgraded = tower.Upgrade();
-            if (!upgraded)
+            GameObject upgraded = tower.Upgrade();
+            if (upgraded != null)
+            {
+                lastBuiltTower = upgraded;
+            }
+            else
             {
                 Debug.Log("Tower is already at max level.");
             }
-            // Optionally, update lastBuiltTower reference if you want to keep track of the new instance:
-            // lastBuiltTower = ... (find the new instance if needed)
         }
     }
 }

@@ -5,6 +5,7 @@ public class TowerPlacementController : MonoBehaviour
     public GridSystem gridSystem;
     public TowerBuilder towerBuilder;
     public TowerType towerTypeToPlace = TowerType.Type_1; // Set this from UI or Inspector
+    public LayerMask groundLayer; 
 
     private GameObject previewTower;
     private bool isPlacing = false;
@@ -39,11 +40,12 @@ public class TowerPlacementController : MonoBehaviour
             }
 
             Ray ray = Camera.main.ScreenPointToRay(pointerPos);
-            if (Physics.Raycast(ray, out RaycastHit hit))
+            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, groundLayer))
             {
                 if (gridSystem.TryGetGridPosition(hit.point, out int x, out int y))
                 {
-                    Vector3 snapPos = gridSystem.GetWorldPosition(x, y);
+                    // Center the tower in the grid cell
+                    Vector3 snapPos = gridSystem.GetWorldPosition(x, y) + new Vector3(gridSystem.cellSize / 2f, 0, gridSystem.cellSize / 2f);
                     previewTower.transform.position = snapPos;
 
                     // Optional: Visual feedback for occupied cells
@@ -53,7 +55,13 @@ public class TowerPlacementController : MonoBehaviour
                     if (pointerDown && canPlace)
                     {
                         gridSystem.SetOccupied(x, y, true);
-                        towerBuilder.BuildTower(towerTypeToPlace, 1, snapPos);
+                        GameObject placedTower = towerBuilder.BuildTower(towerTypeToPlace, 1, snapPos);
+
+                        // Enable SphereCollider on placed tower
+                        var sphere = placedTower.GetComponent<SphereCollider>();
+                        if (sphere != null)
+                            sphere.enabled = true;
+
                         Destroy(previewTower);
                         previewTower = null;
                         isPlacing = false;

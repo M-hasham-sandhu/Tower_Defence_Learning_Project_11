@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   towerType: 0
   towerPrefab: {fileID: 492525137067203374, guid: 673f1f47c1983f840b3932e34c65131b, type: 3}
-  range: 15
+  range: 9
   attackRate: 5
   damage: 20
   usesProjectile: 0

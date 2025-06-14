@@ -522,7 +522,7 @@ GameObject:
   - component: {fileID: 95000011442643512}
   - component: {fileID: 3809122212732523520}
   - component: {fileID: 691626010519772718}
-  - component: {fileID: -960003760636284183}
+  - component: {fileID: 3306694592530621433}
   m_Layer: 0
   m_Name: Bat_Red
   m_TagString: Untagged
@@ -609,8 +609,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   moveSpeed: 3
---- !u!64 &-960003760636284183
-MeshCollider:
+--- !u!65 &3306694592530621433
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -624,13 +624,12 @@ MeshCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
+  serializedVersion: 3
+  m_Size: {x: 0.07627785, y: 0.022850892, z: 0.02528972}
+  m_Center: {x: 0.00063904375, y: 0.010780782, z: -0.00087135006}
 --- !u!1 &1000011643250032
 GameObject:
   m_ObjectHideFlags: 0

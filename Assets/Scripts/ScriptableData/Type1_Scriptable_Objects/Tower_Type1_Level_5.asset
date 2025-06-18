@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b102b75c724696546bb51696cd9a4616, type: 3}
-  m_Name: Fire_Tower_Level_5
+  m_Name: Tower_Type1_Level_5
   m_EditorClassIdentifier: 
   towerType: 0
   towerPrefab: {fileID: 492525137067203374, guid: 673f1f47c1983f840b3932e34c65131b, type: 3}

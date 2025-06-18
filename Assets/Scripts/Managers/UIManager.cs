@@ -1,12 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class UIManager : MonoBehaviour
 {
+    public static UIManager Instance { get; private set; }
+
     public GameObject pausePanel;
     public GameObject gameOverPanel;
     public GameObject victoryPanel;
+
+    [Header("Tower UI")]
+    public GameObject towerPanel; 
+    public TextMeshProUGUI towerCostText; 
+    private Tower selectedTower;
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+            return;
+        }
+        Instance = this;
+        towerPanel?.SetActive(false);
+    }
 
     private void Start()
     {
@@ -38,18 +57,41 @@ public class UIManager : MonoBehaviour
                 }
                 break;
             case GameState.GameOver:
-                if (gameOverPanel != null) gameOverPanel.SetActive(true);
+                gameOverPanel?.SetActive(true);
                 break;
             case GameState.Victory:
-                if (victoryPanel != null) victoryPanel.SetActive(true);
+                victoryPanel?.SetActive(true);
                 break;
         }
     }
 
     private void HideAllPanels()
     {
-        if (pausePanel != null) pausePanel.SetActive(false);
-        if (gameOverPanel != null) gameOverPanel.SetActive(false);
-        if (victoryPanel != null) victoryPanel.SetActive(false);
+        pausePanel?.SetActive(false);
+        gameOverPanel?.SetActive(false);
+        victoryPanel?.SetActive(false);
+        towerPanel?.SetActive(false);
+    }
+
+    public void ShowTowerPanel(Tower tower)
+    {
+        selectedTower = tower;
+        towerPanel?.SetActive(true);
+
+        if (towerCostText != null && tower.Data != null)
+            towerCostText.text = "Cost: " + tower.Data.cost.ToString();
+    }
+
+    public void OnUpgradeButton()
+    {
+        selectedTower?.Upgrade();
+        towerPanel?.SetActive(false);
+        selectedTower = null;
+    }
+
+    public void OnCloseButton()
+    {
+        towerPanel?.SetActive(false);
+        selectedTower = null;
     }
 }

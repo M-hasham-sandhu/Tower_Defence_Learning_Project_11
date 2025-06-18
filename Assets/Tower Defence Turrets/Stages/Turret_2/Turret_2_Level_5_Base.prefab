@@ -97,6 +97,8 @@ GameObject:
   - component: {fileID: 7209385597903113394}
   - component: {fileID: 6619047650122274382}
   - component: {fileID: 3203352800118262030}
+  - component: {fileID: 7838874262898759890}
+  - component: {fileID: -7111981723306669623}
   m_Layer: 0
   m_Name: Turret_2_Level_5_Base
   m_TagString: Untagged
@@ -176,3 +178,36 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7838874262898759890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9101267556545517957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6977f9b13c40fb4595a72122ceb32ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!135 &-7111981723306669623
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9101267556545517957}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 1.9956999
+  m_Center: {x: -0.00000035762787, y: 1.2588668, z: -0.071546316}

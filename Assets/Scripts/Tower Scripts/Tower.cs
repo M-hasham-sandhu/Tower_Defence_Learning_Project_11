@@ -60,4 +60,8 @@ public class Tower : MonoBehaviour
             enemiesInRange.Remove(enemy);
     }
 
+    public void OnSelected()
+    {
+        UIManager.Instance.ShowTowerPanel(this);
+    }
 }

@@ -12,12 +12,7 @@ public class TowerPlacementController : MonoBehaviour
 
     void Update()
     {
-        // Start placement with a key or UI (example: P key)
-        if (!isPlacing && Input.GetKeyDown(KeyCode.P))
-        {
-            StartPlacingTower(towerTypeToPlace);
-        }
-
+       
         if (isPlacing && previewTower != null)
         {
             Vector3 pointerPos = Input.mousePosition;
@@ -34,7 +29,6 @@ public class TowerPlacementController : MonoBehaviour
 
                     bool canPlace = !gridSystem.IsCellOccupied(x, y);
 
-                    // Place tower on click/tap if cell is free
                     bool pointerDown = Input.GetMouseButtonDown(0) ||
                         (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began);
 
@@ -43,7 +37,6 @@ public class TowerPlacementController : MonoBehaviour
                         gridSystem.SetOccupied(x, y, true);
                         GameObject placedTower = towerBuilder.BuildTower(towerTypeToPlace, 1, snapPos);
 
-                        // Enable SphereCollider on placed tower
                         var sphere = placedTower.GetComponent<SphereCollider>();
                         if (sphere != null)
                             sphere.enabled = true;
@@ -55,7 +48,6 @@ public class TowerPlacementController : MonoBehaviour
                 }
             }
 
-            // Cancel placement on right click or touch end (optional)
             bool pointerUp = Input.GetMouseButtonUp(1) ||
                 (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended);
             if (pointerUp && previewTower != null)
@@ -63,6 +55,29 @@ public class TowerPlacementController : MonoBehaviour
                 Destroy(previewTower);
                 previewTower = null;
                 isPlacing = false;
+            }
+        }
+       
+        else if (!isPlacing)
+        {
+            bool pointerDown = Input.GetMouseButtonDown(0) ||
+                (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began);
+
+            if (pointerDown)
+            {
+                Vector3 pointerPos = Input.mousePosition;
+                if (Input.touchCount > 0)
+                    pointerPos = Input.GetTouch(0).position;
+
+                Ray ray = Camera.main.ScreenPointToRay(pointerPos);
+                if (Physics.Raycast(ray, out RaycastHit hit))
+                {
+                    Tower tower = hit.collider.GetComponent<Tower>();
+                    if (tower != null)
+                    {
+                        tower.OnSelected();
+                    }
+                }
             }
         }
     }
@@ -76,12 +91,10 @@ public class TowerPlacementController : MonoBehaviour
         previewTower = towerBuilder.BuildTower(type, 1, Vector3.zero);
         if (previewTower != null)
         {
-            // Disable SphereCollider on preview
             var sphere = previewTower.GetComponent<SphereCollider>();
             if (sphere != null)
                 sphere.enabled = false;
 
-            // Optional: Make preview semi-transparent
             foreach (var r in previewTower.GetComponentsInChildren<Renderer>())
                 r.material.color = new Color(r.material.color.r, r.material.color.g, r.material.color.b, 0.5f);
         }

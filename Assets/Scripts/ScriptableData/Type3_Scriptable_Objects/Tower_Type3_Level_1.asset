@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b102b75c724696546bb51696cd9a4616, type: 3}
-  m_Name: Fire_Tower_Level_3
+  m_Name: Tower_Type3_Level_1
   m_EditorClassIdentifier: 
-  towerType: 0
-  towerPrefab: {fileID: 4412720060544180532, guid: 2b38757df308b4e4199efc48391e3ec3, type: 3}
-  range: 7
-  attackRate: 3
-  damage: 14
+  towerType: 2
+  towerPrefab: {fileID: 4675193037123235935, guid: 827a73fb555198c4e8aed6e38df0bd8e, type: 3}
+  range: 5
+  attackRate: 1
+  damage: 10
   usesProjectile: 0
   projectilePrefab: {fileID: 0}
   projectileSpeed: 10
-  cost: 200
-  sellValue: 100
-  nextUpgrade: {fileID: 11400000, guid: c380876bc5c941f40912b844418a2fac, type: 2}
+  cost: 100
+  sellValue: 50
+  nextUpgrade: {fileID: 11400000, guid: 9f5ed60dd40e1eb4f95af4040d75e37e, type: 2}

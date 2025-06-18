@@ -12,7 +12,7 @@ public class TowerPlacementController : MonoBehaviour
 
     void Update()
     {
-       
+        // --- Tower Placement Logic ---
         if (isPlacing && previewTower != null)
         {
             Vector3 pointerPos = Input.mousePosition;
@@ -57,7 +57,7 @@ public class TowerPlacementController : MonoBehaviour
                 isPlacing = false;
             }
         }
-       
+        // --- Tower Selection Logic (when not placing) ---
         else if (!isPlacing)
         {
             bool pointerDown = Input.GetMouseButtonDown(0) ||

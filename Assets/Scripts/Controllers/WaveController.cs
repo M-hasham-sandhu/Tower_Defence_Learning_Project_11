@@ -39,19 +39,23 @@ public class WaveController : MonoBehaviour
 
     private IEnumerator SpawnWaveCoroutine(WaveData wave)
     {
-        float xPos = 0f;
+        // Get the first waypoint position from WaypointManager
+        Transform[] waypoints = WaypointManager.Instance.waypoints;
+        Vector3 spawnPos = Vector3.zero;
+        if (waypoints != null && waypoints.Length > 0)
+            spawnPos = waypoints[0].position;
+        else
+            Debug.LogWarning("No waypoints assigned in WaypointManager! Enemies will spawn at (0,0,0).");
+
         foreach (var enemyInfo in wave.enemiesToSpawn)
         {
             for (int i = 0; i < enemyInfo.count; i++)
             {
-                Vector3 spawnPos = new Vector3(xPos, 2, 0);
                 GameObject enemy = Instantiate(enemyInfo.enemyPrefab, spawnPos, Quaternion.identity, this.transform);
-                enemy.transform.localScale = new Vector3(50f, 50f, 50f);
-                xPos += 5f;
+                // Optionally set scale or other properties here
                 yield return new WaitForSeconds(enemyInfo.spawnDelay);
             }
         }
-        // Optionally, call CompleteCurrentWave() here if you want to auto-complete after spawning
         // CompleteCurrentWave();
     }
 

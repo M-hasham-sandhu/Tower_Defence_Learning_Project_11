@@ -7,9 +7,18 @@ public class BaseEnemy : MonoBehaviour
     public float moveSpeed = 3f;
     protected float currentHealth;
 
+    // Waypoint movement fields
+    protected Transform[] waypoints;
+    protected int currentWaypoint = 0;
+
     protected virtual void Awake()
     {
         currentHealth = maxHealth;
+    }
+
+    protected virtual void Start()
+    {
+        waypoints = WaypointManager.Instance.waypoints;
     }
 
     public virtual void TakeDamage(float amount)
@@ -23,13 +32,26 @@ public class BaseEnemy : MonoBehaviour
 
     protected virtual void Die()
     {
-        // Play death effects, add score, etc.
         Destroy(gameObject);
     }
 
-    // Example: Move along a path (override for custom movement)
+    // Move along waypoints
     protected virtual void Update()
     {
-        // Implement movement logic here or in a derived class
+        if (waypoints == null || waypoints.Length == 0) return;
+
+        if (currentWaypoint < waypoints.Length)
+        {
+            Vector3 target = waypoints[currentWaypoint].position;
+            Vector3 dir = (target - transform.position).normalized;
+            transform.position += dir * moveSpeed * Time.deltaTime;
+
+            if (Vector3.Distance(transform.position, target) < 0.1f)
+                currentWaypoint++;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 }

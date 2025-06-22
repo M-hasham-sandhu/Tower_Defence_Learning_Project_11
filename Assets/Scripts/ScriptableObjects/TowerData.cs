@@ -15,7 +15,7 @@ public class TowerData : ScriptableObject
     public GameObject towerPrefab;
     [Header("Stats")]
     public float range = 5f;
-    public float attackRate = 1f; // Attacks per second
+    public float attackRate = 1f; 
     public float damage = 10f;
     [Header("Projectile (optional)")]
     public bool usesProjectile = false;

@@ -42,4 +42,10 @@ public class CurrencyManager : MonoBehaviour
         currentGold += amount;
         GoldChanged?.Invoke(currentGold);
     }
+
+    public void SetGold(int amount)
+    {
+        currentGold = amount;
+        GoldChanged?.Invoke(currentGold);
+    }
 }

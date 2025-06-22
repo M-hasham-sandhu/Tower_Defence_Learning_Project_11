@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Tower : MonoBehaviour
 {
-    public TowerData Data { get; private set; }
+    public TowerData Data { get; private set; } 
     private List<BaseEnemy> enemiesInRange = new List<BaseEnemy>();
     private Dictionary<BaseEnemy, Coroutine> attackCoroutines = new Dictionary<BaseEnemy, Coroutine>();
 

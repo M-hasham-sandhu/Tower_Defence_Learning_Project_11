@@ -11,6 +11,8 @@ public class BaseEnemy : MonoBehaviour
     protected Transform[] waypoints;
     protected int currentWaypoint = 0;
 
+    public float CurrentHealth => currentHealth;
+
     protected virtual void Awake()
     {
         currentHealth = maxHealth;
@@ -32,7 +34,7 @@ public class BaseEnemy : MonoBehaviour
 
     protected virtual void Die()
     {
-        CurrencyManager.Instance.AddGold(10); // Reward player for kill
+        CurrencyManager.Instance.AddGold(10);
         Destroy(gameObject);
     }
 
@@ -58,5 +60,10 @@ public class BaseEnemy : MonoBehaviour
     public virtual float Attack()
     {
        return damage;
+    }
+
+    public void SetHealth(float value)
+    {
+        currentHealth = value;
     }
 }

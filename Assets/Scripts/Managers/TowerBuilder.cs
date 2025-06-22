@@ -46,6 +46,13 @@ public class TowerBuilder : MonoBehaviour
             return null;
         }
 
+        // Check if player has enough gold
+        if (!CurrencyManager.Instance.SpendGold(data.cost))
+        {
+            Debug.LogWarning("Not enough gold to build this tower!");
+            return null;
+        }
+
         GameObject tower = Instantiate(data.towerPrefab, position, Quaternion.identity, parent);
         var towerScript = tower.GetComponent<Tower>();
         if (towerScript != null)

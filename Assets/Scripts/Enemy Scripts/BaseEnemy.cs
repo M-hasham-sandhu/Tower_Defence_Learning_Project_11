@@ -6,8 +6,8 @@ public class BaseEnemy : MonoBehaviour
     public float maxHealth = 100f;
     public float moveSpeed = 3f;
     protected float currentHealth;
+    private float damage = 5f;
 
-    // Waypoint movement fields
     protected Transform[] waypoints;
     protected int currentWaypoint = 0;
 
@@ -32,10 +32,10 @@ public class BaseEnemy : MonoBehaviour
 
     protected virtual void Die()
     {
+        CurrencyManager.Instance.AddGold(10); // Reward player for kill
         Destroy(gameObject);
     }
 
-    // Move along waypoints
     protected virtual void Update()
     {
         if (waypoints == null || waypoints.Length == 0) return;
@@ -53,5 +53,10 @@ public class BaseEnemy : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    public virtual float Attack()
+    {
+       return damage;
     }
 }

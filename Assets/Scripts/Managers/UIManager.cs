@@ -16,6 +16,9 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI towerCostText; 
     private Tower selectedTower;
 
+    [Header("Currency UI")]
+    public TextMeshProUGUI goldText; 
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -31,12 +34,22 @@ public class UIManager : MonoBehaviour
     {
         if (GameManger.Instance != null)
             GameManger.Instance.OnGameStateChanged += HandleGameStateChanged;
+
+        // Subscribe to currency changes
+        if (CurrencyManager.Instance != null)
+        {
+            CurrencyManager.Instance.GoldChanged += UpdateGoldUI;
+            UpdateGoldUI(CurrencyManager.Instance.CurrentGold); // Initial update
+        }
     }
 
     private void OnDisable()
     {
         if (GameManger.Instance != null)
             GameManger.Instance.OnGameStateChanged -= HandleGameStateChanged;
+
+        if (CurrencyManager.Instance != null)
+            CurrencyManager.Instance.GoldChanged -= UpdateGoldUI;
     }
 
     private void HandleGameStateChanged(GameState state)
@@ -93,5 +106,29 @@ public class UIManager : MonoBehaviour
     {
         towerPanel?.SetActive(false);
         selectedTower = null;
+    }
+
+    // --- Currency UI update ---
+    private void UpdateGoldUI(int newGold)
+    {
+        if (goldText != null)
+            goldText.text = $"{newGold}";
+    }
+
+    public void ShowNotEnoughGoldMessage()
+    {
+        // You can implement a popup, flash the gold text, etc.
+        Debug.LogWarning("Not enough gold!");
+        // Example: flash the goldText red
+        if (goldText != null)
+            StartCoroutine(FlashGoldTextRed());
+    }
+
+    private IEnumerator FlashGoldTextRed()
+    {
+        Color originalColor = goldText.color;
+        goldText.color = Color.red;
+        yield return new WaitForSeconds(0.5f);
+        goldText.color = originalColor;
     }
 }

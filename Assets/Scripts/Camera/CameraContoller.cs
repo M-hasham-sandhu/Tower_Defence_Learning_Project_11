@@ -8,6 +8,9 @@ public class CameraContoller : MonoBehaviour
     public float cameraHeight = 30f;
     public float moveSpeed = 10f;
     public float drag = 5f; // Higher = stops faster, lower = more inertia
+    public float minZoom = 10f;
+    public float maxZoom = 60f;
+    public float zoomSpeed = 10f;
 
     private Vector3 minBounds;
     private Vector3 maxBounds;
@@ -68,6 +71,30 @@ public class CameraContoller : MonoBehaviour
                 input += new Vector3(-delta.x, 0, -delta.y) * 0.1f;
             }
         }
+
+        // --- Camera Zoom ---
+        // Mouse scroll wheel
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        if (Mathf.Abs(scroll) > 0.01f)
+        {
+            cameraHeight -= scroll * zoomSpeed;
+            cameraHeight = Mathf.Clamp(cameraHeight, minZoom, maxZoom);
+        }
+
+        // Touch pinch zoom
+        if (Input.touchCount == 2)
+        {
+            Touch touch0 = Input.GetTouch(0);
+            Touch touch1 = Input.GetTouch(1);
+            Vector2 prevTouch0 = touch0.position - touch0.deltaPosition;
+            Vector2 prevTouch1 = touch1.position - touch1.deltaPosition;
+            float prevDist = (prevTouch0 - prevTouch1).magnitude;
+            float currDist = (touch0.position - touch1.position).magnitude;
+            float deltaDist = currDist - prevDist;
+            cameraHeight -= deltaDist * 0.05f; // Pinch sensitivity
+            cameraHeight = Mathf.Clamp(cameraHeight, minZoom, maxZoom);
+        }
+        // --- End Camera Zoom ---
 
         // Apply input to velocity
         if (input.sqrMagnitude > 0.01f)

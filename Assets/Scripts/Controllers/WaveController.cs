@@ -39,11 +39,11 @@ public class WaveController : MonoBehaviour
 
     private IEnumerator SpawnWaveCoroutine(WaveData wave)
     {
-        // Get the first waypoint position from WaypointManager
-        Transform[] waypoints = WaypointManager.Instance.waypoints;
+        // For each wave, randomly select a path for all enemies in this wave
+        Transform[] selectedPath = WaypointManager.Instance.GetRandomPath();
         Vector3 spawnPos = Vector3.zero;
-        if (waypoints != null && waypoints.Length > 0)
-            spawnPos = waypoints[0].position;
+        if (selectedPath != null && selectedPath.Length > 0)
+            spawnPos = selectedPath[0].position;
         else
             Debug.LogWarning("No waypoints assigned in WaypointManager! Enemies will spawn at (0,0,0).");
 
@@ -52,7 +52,12 @@ public class WaveController : MonoBehaviour
             for (int i = 0; i < enemyInfo.count; i++)
             {
                 GameObject enemy = Instantiate(enemyInfo.enemyPrefab, spawnPos, Quaternion.identity, this.transform);
-                // Optionally set scale or other properties here
+                // Assign the path to the enemy if possible
+                BaseEnemy baseEnemy = enemy.GetComponent<BaseEnemy>();
+                if (baseEnemy != null)
+                {
+                    baseEnemy.SetWaypoints(selectedPath);
+                }
                 yield return new WaitForSeconds(enemyInfo.spawnDelay);
             }
         }

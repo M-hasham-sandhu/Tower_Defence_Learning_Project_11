@@ -4,33 +4,36 @@ using UnityEngine;
 
 public class Tower : MonoBehaviour
 {
-    public TowerData Data { get; private set; } 
+    public TowerData Data { get; private set; }
+    public int Level { get; private set; } = 0;
     private List<BaseEnemy> enemiesInRange = new List<BaseEnemy>();
     private Dictionary<BaseEnemy, Coroutine> attackCoroutines = new Dictionary<BaseEnemy, Coroutine>();
 
-    public void Initialize(TowerData towerData)
+    public void Initialize(TowerData towerData, int level = 0)
     {
         Data = towerData;
+        Level = level;
         var sphere = GetComponent<SphereCollider>();
         if (sphere != null)
-            sphere.radius = Data.range;
+            sphere.radius = Data.levels[Level].range;
     }
+
+    public bool CanUpgrade => Level + 1 < Data.levels.Count;
 
     public GameObject Upgrade()
     {
-        if (Data.nextUpgrade == null)
+        if (!CanUpgrade)
         {
             Debug.Log("Tower is already at max level.");
             return null;
         }
 
-        TowerData nextData = Data.nextUpgrade;
-
+        TowerLevelStats nextStats = Data.levels[Level + 1];
         // Check if player has enough gold for upgrade
-        if (!CurrencyManager.Instance.SpendGold(nextData.cost))
+        if (!CurrencyManager.Instance.SpendGold(nextStats.cost))
         {
             Debug.Log("Not enough gold to upgrade this tower!");
-            UIManager.Instance.ShowNotEnoughGoldMessage(); // Optional: show a warning in UI
+            UIManager.Instance.ShowNotEnoughGoldMessage();
             return null;
         }
 
@@ -39,12 +42,12 @@ public class Tower : MonoBehaviour
         Transform parent = transform.parent;
 
         Destroy(gameObject);
-        GameObject upgradedTower = Instantiate(nextData.towerPrefab, pos, rot, parent);
+        GameObject upgradedTower = Instantiate(nextStats.towerPrefab, pos, rot, parent);
         var towerScript = upgradedTower.GetComponent<Tower>();
         if (towerScript != null)
-            towerScript.Initialize(nextData);
+            towerScript.Initialize(Data, Level + 1);
 
-        Debug.Log("Tower upgraded! New stats: Damage=" + nextData.damage + ", Range=" + nextData.range + ", AttackRate=" + nextData.attackRate);
+        Debug.Log($"Tower upgraded! New stats: Damage={nextStats.damage}, Range={nextStats.range}, AttackRate={nextStats.attackRate}");
         return upgradedTower;
     }
 
@@ -77,9 +80,10 @@ public class Tower : MonoBehaviour
     {
         while (enemy != null && enemiesInRange.Contains(enemy))
         {
-            enemy.TakeDamage(Data.damage);
-            Debug.Log("Attacking enemy: " + enemy.name + ", Damage dealt: " + Data.damage);
-            yield return new WaitForSeconds(1f / Data.attackRate);
+            var stats = Data.levels[Level];
+            enemy.TakeDamage(stats.damage);
+            Debug.Log($"Attacking enemy: {enemy.name}, Damage dealt: {stats.damage}");
+            yield return new WaitForSeconds(1f / stats.attackRate);
         }
     }
 

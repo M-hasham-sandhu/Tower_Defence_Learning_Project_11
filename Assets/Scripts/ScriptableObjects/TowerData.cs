@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public enum TowerType
 {
@@ -8,14 +9,14 @@ public enum TowerType
     Type_4
 }
 
-[CreateAssetMenu(menuName = "TowerDefense/TowerData")]
-public class TowerData : ScriptableObject
+[System.Serializable]
+public class TowerLevelStats
 {
-    public TowerType towerType;
+    [Header("Prefab & Visuals")]
     public GameObject towerPrefab;
     [Header("Stats")]
     public float range = 5f;
-    public float attackRate = 1f; 
+    public float attackRate = 1f;
     public float damage = 10f;
     [Header("Projectile (optional)")]
     public bool usesProjectile = false;
@@ -24,7 +25,12 @@ public class TowerData : ScriptableObject
     [Header("Economy")]
     public int cost = 100;
     public int sellValue = 50;
-    [Header("Upgrade")]
-    [Tooltip("Assign the next upgrade for this tower (or leave empty if max level).")]
-    public TowerData nextUpgrade;
+}
+
+[CreateAssetMenu(menuName = "TowerDefense/TowerData")]
+public class TowerData : ScriptableObject
+{
+    public TowerType towerType;
+    [Header("Levels")]
+    public List<TowerLevelStats> levels = new List<TowerLevelStats>();
 }

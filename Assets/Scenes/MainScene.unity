@@ -36313,10 +36313,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allTowers:
-  - {fileID: 11400000, guid: 67c3f4d4a80071940b91022ae86c2768, type: 2}
-  - {fileID: 11400000, guid: 5439fadd5d9047946a83586d05864e91, type: 2}
-  - {fileID: 11400000, guid: 6996d6e4474c9ab40b6a78dec2127e28, type: 2}
-  - {fileID: 11400000, guid: d45bbf8043cda964790a002eb635abf2, type: 2}
+  - {fileID: 11400000, guid: 81b9da4128e282046be158a7f6e9f1e5, type: 2}
+  - {fileID: 11400000, guid: 40c3abaec33540e44a732c0e97f0dfae, type: 2}
+  - {fileID: 11400000, guid: c21db29f21f31a8479a6a3cc20dbf8c7, type: 2}
+  - {fileID: 11400000, guid: 627f40f51f5583943a798c6761ef113e, type: 2}
   testSpawnParent: {fileID: 1516703228}
   testSpawnPosition: {x: 0, y: 0, z: 0}
 --- !u!1001 &1518156280

@@ -92,12 +92,18 @@ public class UIManager : MonoBehaviour
         towerPanel?.SetActive(true);
 
         if (towerCostText != null && tower.Data != null)
-            towerCostText.text = "Cost: " + tower.Data.cost.ToString();
+        {
+            var stats = tower.Data.levels[tower.Level];
+            towerCostText.text = $"{stats.cost} Gold";
+        }
     }
 
     public void OnUpgradeButton()
     {
-        selectedTower?.Upgrade();
+        if (selectedTower != null && selectedTower.CanUpgrade)
+        {
+            selectedTower.Upgrade();
+        }
         towerPanel?.SetActive(false);
         selectedTower = null;
     }
@@ -108,7 +114,6 @@ public class UIManager : MonoBehaviour
         selectedTower = null;
     }
 
-    // --- Currency UI update ---
     private void UpdateGoldUI(int newGold)
     {
         if (goldText != null)

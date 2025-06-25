@@ -12,7 +12,6 @@ public class TowerPlacementController : MonoBehaviour
 
     void Update()
     {
-        // --- Tower Placement Logic ---
         if (isPlacing && previewTower != null)
         {
             Vector3 pointerPos = Input.mousePosition;
@@ -35,10 +34,20 @@ public class TowerPlacementController : MonoBehaviour
                     if (pointerDown && canPlace)
                     {
                         gridSystem.SetOccupied(x, y, true);
-                        GameObject placedTower = towerBuilder.BuildTower(towerTypeToPlace, 1, snapPos);
+                        GameObject placedTower = towerBuilder.BuildTower(towerTypeToPlace, 0, snapPos);
+                        if (placedTower == null)
+                        {
+                            Debug.LogError($"BuildTower returned null for type {towerTypeToPlace} at position {snapPos}. Check TowerData assignment, prefab reference, and gold amount.");
+                            Destroy(previewTower);
+                            previewTower = null;
+                            isPlacing = false;
+                            return;
+                        }
 
                         var sphere = placedTower.GetComponent<SphereCollider>();
-                        if (sphere != null)
+                        if (sphere == null)
+                            Debug.LogError($"No SphereCollider found on prefab: {placedTower.name}");
+                        else
                             sphere.enabled = true;
 
                         Destroy(previewTower);
@@ -57,7 +66,6 @@ public class TowerPlacementController : MonoBehaviour
                 isPlacing = false;
             }
         }
-        // --- Tower Selection Logic (when not placing) ---
         else if (!isPlacing)
         {
             bool pointerDown = Input.GetMouseButtonDown(0) ||
@@ -88,7 +96,8 @@ public class TowerPlacementController : MonoBehaviour
         if (previewTower != null)
             Destroy(previewTower);
 
-        previewTower = towerBuilder.BuildTower(type, 1, Vector3.zero);
+        // Use the new preview method that does NOT spend gold
+        previewTower = towerBuilder.GetPreviewTower(type);
         if (previewTower != null)
         {
             var sphere = previewTower.GetComponent<SphereCollider>();

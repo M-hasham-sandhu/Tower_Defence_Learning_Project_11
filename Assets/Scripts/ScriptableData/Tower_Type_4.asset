@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b102b75c724696546bb51696cd9a4616, type: 3}
+  m_Name: Tower_Type_4
+  m_EditorClassIdentifier: 
+  towerType: 3
+  levels:
+  - towerPrefab: {fileID: 2087621527941656380, guid: c8f8e6fedf33ec8469bba2a025ec61b6, type: 3}
+    range: 5
+    attackRate: 1
+    damage: 10
+    usesProjectile: 0
+    projectilePrefab: {fileID: 0}
+    projectileSpeed: 0
+    cost: 100
+    sellValue: 50
+  - towerPrefab: {fileID: 8666452089711817624, guid: d3b5160a20ab1c644b4ea78b66b7e72f, type: 3}
+    range: 6
+    attackRate: 2
+    damage: 12
+    usesProjectile: 0
+    projectilePrefab: {fileID: 0}
+    projectileSpeed: 0
+    cost: 150
+    sellValue: 75
+  - towerPrefab: {fileID: 6423046932121893617, guid: 273bbe70e79065c49af4964f69644b2a, type: 3}
+    range: 7
+    attackRate: 3
+    damage: 14
+    usesProjectile: 0
+    projectilePrefab: {fileID: 0}
+    projectileSpeed: 0
+    cost: 200
+    sellValue: 100
+  - towerPrefab: {fileID: 9183702452408822073, guid: 792caf7f3b9852a429b38235dceef601, type: 3}
+    range: 8
+    attackRate: 4
+    damage: 16
+    usesProjectile: 0
+    projectilePrefab: {fileID: 0}
+    projectileSpeed: 0
+    cost: 250
+    sellValue: 125
+  - towerPrefab: {fileID: 120602083931634864, guid: 1720e6a65a108794cb70bad3e389bcf9, type: 3}
+    range: 9
+    attackRate: 5
+    damage: 20
+    usesProjectile: 0
+    projectilePrefab: {fileID: 0}
+    projectileSpeed: 0
+    cost: 300
+    sellValue: 150

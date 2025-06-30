@@ -12,12 +12,18 @@ public class TowerPlacementController : MonoBehaviour
 
     void Update()
     {
+        bool isTouch = Input.touchCount > 0;
+        Vector3 pointerPos = Input.mousePosition;
+        TouchPhase? touchPhase = null;
+        if (isTouch)
+        {
+            var touch = Input.GetTouch(0);
+            pointerPos = touch.position;
+            touchPhase = touch.phase;
+        }
+
         if (isPlacing && previewTower != null)
         {
-            Vector3 pointerPos = Input.mousePosition;
-            if (Input.touchCount > 0)
-                pointerPos = Input.GetTouch(0).position;
-
             Ray ray = Camera.main.ScreenPointToRay(pointerPos);
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, groundLayer))
             {
@@ -28,8 +34,11 @@ public class TowerPlacementController : MonoBehaviour
 
                     bool canPlace = !gridSystem.IsCellOccupied(x, y);
 
-                    bool pointerDown = Input.GetMouseButtonDown(0) ||
-                        (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began);
+                    bool pointerDown = false;
+                    if (isTouch)
+                        pointerDown = touchPhase == TouchPhase.Began;
+                    else
+                        pointerDown = Input.GetMouseButtonDown(0);
 
                     if (pointerDown && canPlace)
                     {
@@ -57,8 +66,11 @@ public class TowerPlacementController : MonoBehaviour
                 }
             }
 
-            bool pointerUp = Input.GetMouseButtonUp(1) ||
-                (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended);
+            bool pointerUp = false;
+            if (isTouch)
+                pointerUp = touchPhase == TouchPhase.Ended || touchPhase == TouchPhase.Canceled;
+            else
+                pointerUp = Input.GetMouseButtonUp(1);
             if (pointerUp && previewTower != null)
             {
                 Destroy(previewTower);
@@ -68,15 +80,14 @@ public class TowerPlacementController : MonoBehaviour
         }
         else if (!isPlacing)
         {
-            bool pointerDown = Input.GetMouseButtonDown(0) ||
-                (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began);
+            bool pointerDown = false;
+            if (isTouch)
+                pointerDown = touchPhase == TouchPhase.Began;
+            else
+                pointerDown = Input.GetMouseButtonDown(0);
 
             if (pointerDown)
             {
-                Vector3 pointerPos = Input.mousePosition;
-                if (Input.touchCount > 0)
-                    pointerPos = Input.GetTouch(0).position;
-
                 Ray ray = Camera.main.ScreenPointToRay(pointerPos);
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {

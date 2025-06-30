@@ -53,12 +53,17 @@ public class Tower : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        // Only allow enemies to be tracked if they are not already dead/destroyed
         BaseEnemy enemy = other.GetComponent<BaseEnemy>();
-        if (enemy != null && !enemiesInRange.Contains(enemy))
+        if (enemy != null && !enemiesInRange.Contains(enemy) && enemy.gameObject.activeInHierarchy)
         {
             enemiesInRange.Add(enemy);
-            Coroutine attackRoutine = StartCoroutine(AttackEnemy(enemy));
-            attackCoroutines[enemy] = attackRoutine;
+            // Prevent duplicate coroutines for the same enemy
+            if (!attackCoroutines.ContainsKey(enemy))
+            {
+                Coroutine attackRoutine = StartCoroutine(AttackEnemy(enemy));
+                attackCoroutines[enemy] = attackRoutine;
+            }
         }
     }
 
@@ -78,13 +83,28 @@ public class Tower : MonoBehaviour
 
     private IEnumerator AttackEnemy(BaseEnemy enemy)
     {
-        while (enemy != null && enemiesInRange.Contains(enemy))
+        while (enemy != null && enemiesInRange.Contains(enemy) && enemy.gameObject.activeInHierarchy)
         {
             var stats = Data.levels[Level];
-            enemy.TakeDamage(stats.damage);
-            Debug.Log($"Attacking enemy: {enemy.name}, Damage dealt: {stats.damage}");
+            if (stats.usesProjectile && stats.projectilePrefab != null)
+            {
+                GameObject projObj = Instantiate(stats.projectilePrefab, transform.position, Quaternion.identity);
+                ProjectileBase proj = projObj.GetComponent<ProjectileBase>();
+                if (proj != null)
+                {
+                    proj.Initialize(enemy.transform, stats.projectileSpeed, stats.damage);
+                }
+            }
+            else
+            {
+                enemy.TakeDamage(stats.damage);
+                Debug.Log($"Attacking enemy: {enemy.name}, Damage dealt: {stats.damage}");
+            }
             yield return new WaitForSeconds(1f / stats.attackRate);
         }
+        // Clean up coroutine reference if enemy is gone
+        if (attackCoroutines.ContainsKey(enemy))
+            attackCoroutines.Remove(enemy);
     }
 
     public void OnSelected()

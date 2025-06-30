@@ -6,8 +6,8 @@ public class CameraContoller : MonoBehaviour
 {
     public GameObject terrainObject; // Assign your box/mesh in Inspector
     public float cameraHeight = 30f;
-    public float moveSpeed = 10f;
-    public float drag = 5f; // Higher = stops faster, lower = more inertia
+    public float moveSpeed = 20f;
+    public float drag = 1f; // Higher = stops faster, lower = more inertia
     public float minZoom = 10f;
     public float maxZoom = 60f;
     public float zoomSpeed = 10f;
@@ -39,7 +39,7 @@ public class CameraContoller : MonoBehaviour
         // Center camera above the object
         Vector3 center = bounds.center;
         transform.position = new Vector3(center.x, cameraHeight, center.z);
-        transform.rotation = Quaternion.Euler(90f, 0f, 0f); // Look straight down
+        transform.rotation = Quaternion.Euler(55f, 0f, 0f); // Look straight down
     }
 
     void Update()

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class TowerPlacementController : MonoBehaviour
 {
@@ -15,15 +16,18 @@ public class TowerPlacementController : MonoBehaviour
         bool isTouch = Input.touchCount > 0;
         Vector3 pointerPos = Input.mousePosition;
         TouchPhase? touchPhase = null;
+
         if (isTouch)
         {
             var touch = Input.GetTouch(0);
             pointerPos = touch.position;
             touchPhase = touch.phase;
+            Debug.Log($"Touch detected - Phase: {touchPhase}, Position: {pointerPos}");
         }
 
         if (isPlacing && previewTower != null)
         {
+            // Always move preview to pointer/touch position
             Ray ray = Camera.main.ScreenPointToRay(pointerPos);
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, groundLayer))
             {
@@ -34,16 +38,30 @@ public class TowerPlacementController : MonoBehaviour
 
                     bool canPlace = !gridSystem.IsCellOccupied(x, y);
 
+                    // Only place on second tap/click
                     bool pointerDown = false;
+                    string touchPhaseStr = touchPhase.HasValue ? touchPhase.ToString() : "null";
+                    bool overUI = false;
                     if (isTouch)
-                        pointerDown = touchPhase == TouchPhase.Began;
-                    else
-                        pointerDown = Input.GetMouseButtonDown(0);
-
-                    if (pointerDown && canPlace)
                     {
+                        pointerDown = touchPhase == TouchPhase.Began;
+                        // Check if touch is over UI
+                        if (Input.touchCount > 0)
+                            overUI = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId);
+                    }
+                    else
+                    {
+                        pointerDown = Input.GetMouseButtonDown(0);
+                        // Check if mouse is over UI
+                        overUI = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
+                    }
+
+                    if (pointerDown && canPlace && !overUI)
+                    {
+                        Debug.Log($"Placing tower of type {towerTypeToPlace} at position {snapPos} (triggered by: {(isTouch ? touchPhaseStr : "Mouse")})");
                         gridSystem.SetOccupied(x, y, true);
                         GameObject placedTower = towerBuilder.BuildTower(towerTypeToPlace, 0, snapPos);
+
                         if (placedTower == null)
                         {
                             Debug.LogError($"BuildTower returned null for type {towerTypeToPlace} at position {snapPos}. Check TowerData assignment, prefab reference, and gold amount.");
@@ -54,9 +72,7 @@ public class TowerPlacementController : MonoBehaviour
                         }
 
                         var sphere = placedTower.GetComponent<SphereCollider>();
-                        if (sphere == null)
-                            Debug.LogError($"No SphereCollider found on prefab: {placedTower.name}");
-                        else
+                        if (sphere != null)
                             sphere.enabled = true;
 
                         Destroy(previewTower);
@@ -65,28 +81,24 @@ public class TowerPlacementController : MonoBehaviour
                     }
                 }
             }
-
-            bool pointerUp = false;
-            if (isTouch)
-                pointerUp = touchPhase == TouchPhase.Ended || touchPhase == TouchPhase.Canceled;
-            else
-                pointerUp = Input.GetMouseButtonUp(1);
-            if (pointerUp && previewTower != null)
-            {
-                Destroy(previewTower);
-                previewTower = null;
-                isPlacing = false;
-            }
         }
         else if (!isPlacing)
         {
             bool pointerDown = false;
+            bool overUI = false;
             if (isTouch)
+            {
                 pointerDown = touchPhase == TouchPhase.Began;
+                if (Input.touchCount > 0)
+                    overUI = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId);
+            }
             else
+            {
                 pointerDown = Input.GetMouseButtonDown(0);
+                overUI = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
+            }
 
-            if (pointerDown)
+            if (pointerDown && !overUI)
             {
                 Ray ray = Camera.main.ScreenPointToRay(pointerPos);
                 if (Physics.Raycast(ray, out RaycastHit hit))

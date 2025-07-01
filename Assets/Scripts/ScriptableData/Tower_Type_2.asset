@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b102b75c724696546bb51696cd9a4616, type: 3}
+  m_Name: Tower_Type_2
+  m_EditorClassIdentifier: 
+  towerType: 1
+  levels:
+  - towerPrefab: {fileID: 3420274166927340714, guid: 0e01b6013644f5345853dfdbd9c2da4d, type: 3}
+    range: 5
+    attackRate: 1
+    damage: 10
+    usesProjectile: 1
+    projectilePrefab: {fileID: 4162646470454716557, guid: 63967c4a832ac1144b32ab0e36367c6e, type: 3}
+    projectileSpeed: 5
+    cost: 100
+    sellValue: 50
+  - towerPrefab: {fileID: 3130657432231038101, guid: ea6b66288e3ecf14899bbdd931c8f0a2, type: 3}
+    range: 6
+    attackRate: 2
+    damage: 12
+    usesProjectile: 1
+    projectilePrefab: {fileID: 4162646470454716557, guid: 63967c4a832ac1144b32ab0e36367c6e, type: 3}
+    projectileSpeed: 5
+    cost: 150
+    sellValue: 75
+  - towerPrefab: {fileID: 5126434926507919936, guid: 42832b227c7339f418ed992ba95f3d71, type: 3}
+    range: 7
+    attackRate: 3
+    damage: 14
+    usesProjectile: 1
+    projectilePrefab: {fileID: 4162646470454716557, guid: 63967c4a832ac1144b32ab0e36367c6e, type: 3}
+    projectileSpeed: 5
+    cost: 200
+    sellValue: 100
+  - towerPrefab: {fileID: 3608005224938552189, guid: b905a9b9fa5f32641bec440424355a32, type: 3}
+    range: 8
+    attackRate: 4
+    damage: 16
+    usesProjectile: 1
+    projectilePrefab: {fileID: 4162646470454716557, guid: 63967c4a832ac1144b32ab0e36367c6e, type: 3}
+    projectileSpeed: 5
+    cost: 250
+    sellValue: 125
+  - towerPrefab: {fileID: 9101267556545517957, guid: b90cbceb97374d0428948c7bca285f68, type: 3}
+    range: 9
+    attackRate: 5
+    damage: 20
+    usesProjectile: 1
+    projectilePrefab: {fileID: 4162646470454716557, guid: 63967c4a832ac1144b32ab0e36367c6e, type: 3}
+    projectileSpeed: 5
+    cost: 300
+    sellValue: 150

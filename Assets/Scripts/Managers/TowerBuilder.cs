@@ -6,72 +6,50 @@ public class TowerBuilder : MonoBehaviour
     [Header("All Tower Data (assign in Inspector)")]
     public List<TowerData> allTowers;
 
-    private Dictionary<(TowerType, int), TowerData> towerLookup;
-
     // For testing
     private GameObject lastBuiltTower;
     public Transform testSpawnParent;
     public Vector3 testSpawnPosition = Vector3.zero;
+    private GameObject previewTower;
 
     private void Awake()
     {
-        BuildTowerLookup();
+        
     }
 
-    private void BuildTowerLookup()
+    // Build a tower by type and level (level starts at 0)
+    public GameObject BuildTower(TowerType type, int level, Vector3 position, Transform parent = null)
     {
-        towerLookup = new Dictionary<(TowerType, int), TowerData>();
-        foreach (var baseData in allTowers)
-        {
-            var data = baseData;
-            int stage = 1;
-            while (data != null)
-            {
-                var key = (data.towerType, stage);
-                if (!towerLookup.ContainsKey(key))
-                    towerLookup.Add(key, data);
-                data = data.nextUpgrade;
-                stage++;
-            }
-        }
-    }
-
-    // Build a tower by type and stage (stage starts at 1)
-    public GameObject BuildTower(TowerType type, int stage, Vector3 position, Transform parent = null)
-    {
-        TowerData data = GetTowerData(type, stage);
+        TowerData data = allTowers.Find(t => t.towerType == type);
         if (data == null)
         {
-            Debug.LogWarning($"No TowerData found for {type} at stage {stage}!");
+            Debug.LogWarning($"No TowerData found for {type}!");
             return null;
         }
-
+        if (level < 0 || level >= data.levels.Count)
+        {
+            Debug.LogWarning($"No level {level} for tower type {type}!");
+            return null;
+        }
+        var stats = data.levels[level];
         // Check if player has enough gold
-        if (!CurrencyManager.Instance.SpendGold(data.cost))
+        if (!CurrencyManager.Instance.SpendGold(stats.cost))
         {
             Debug.LogWarning("Not enough gold to build this tower!");
             return null;
         }
-
-        GameObject tower = Instantiate(data.towerPrefab, position, Quaternion.identity, parent);
+        Debug.Log($"[TowerBuilder] Attempting to build {type} at level {level}. Cost: {stats.cost}, Current Gold: {CurrencyManager.Instance.CurrentGold}");
+        GameObject tower = Instantiate(stats.towerPrefab, position, Quaternion.identity, parent);
         var towerScript = tower.GetComponent<Tower>();
         if (towerScript != null)
-            towerScript.Initialize(data);
-
+            towerScript.Initialize(data, level);
         return tower;
     }
 
-    // Fast lookup using the dictionary
-    public TowerData GetTowerData(TowerType type, int stage)
-    {
-        towerLookup.TryGetValue((type, stage), out TowerData data);
-        return data;
-    }
-
-    // Call this from a UI button to build the first stage of a tower
+    // Call this from a UI button to build the first level of a tower
     public void BuildTestTower()
     {
-        lastBuiltTower = BuildTower(TowerType.Type_1, 1, Vector3.zero, testSpawnParent);
+        lastBuiltTower = BuildTower(TowerType.Type_1, 0, Vector3.zero, testSpawnParent);
         if (lastBuiltTower != null)
         {
             Debug.Log("Built tower: " + lastBuiltTower.GetComponent<Tower>().Data.name);
@@ -99,5 +77,24 @@ public class TowerBuilder : MonoBehaviour
                 Debug.Log("Tower is already at max level.");
             }
         }
+    }
+
+    // Call this to preview a tower's first level prefab
+    public void PreviewTower(TowerType type)
+    {
+        // Destroy existing preview tower if any
+        if (previewTower != null)
+            Destroy(previewTower);
+        previewTower = GetPreviewTower(type);
+    }
+
+    public GameObject GetPreviewTower(TowerType type)
+    {
+        var data = allTowers.Find(t => t.towerType == type);
+        if (data != null && data.levels.Count > 0 && data.levels[0].towerPrefab != null)
+            return Instantiate(data.levels[0].towerPrefab, Vector3.zero, Quaternion.identity);
+        else
+            Debug.LogWarning("Preview tower NOT instantiated! Check your prefab and TowerData.");
+        return null;
     }
 }

@@ -22,7 +22,6 @@ public class TowerPlacementController : MonoBehaviour
             var touch = Input.GetTouch(0);
             pointerPos = touch.position;
             touchPhase = touch.phase;
-            Debug.Log($"Touch detected - Phase: {touchPhase}, Position: {pointerPos}");
         }
 
         if (isPlacing && previewTower != null)
@@ -58,13 +57,11 @@ public class TowerPlacementController : MonoBehaviour
 
                     if (pointerDown && canPlace && !overUI)
                     {
-                        Debug.Log($"Placing tower of type {towerTypeToPlace} at position {snapPos} (triggered by: {(isTouch ? touchPhaseStr : "Mouse")})");
                         gridSystem.SetOccupied(x, y, true);
                         GameObject placedTower = towerBuilder.BuildTower(towerTypeToPlace, 0, snapPos);
 
                         if (placedTower == null)
                         {
-                            Debug.LogError($"BuildTower returned null for type {towerTypeToPlace} at position {snapPos}. Check TowerData assignment, prefab reference, and gold amount.");
                             Destroy(previewTower);
                             previewTower = null;
                             isPlacing = false;
@@ -115,7 +112,6 @@ public class TowerPlacementController : MonoBehaviour
 
     public void StartPlacingTower(TowerType type)
     {
-        Debug.Log("StartPlacingTower called with type: " + type);
         if (previewTower != null)
             Destroy(previewTower);
 
